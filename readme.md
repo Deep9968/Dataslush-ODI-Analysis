@@ -125,7 +125,7 @@
 4. Load the master CSV files into the tables:
     ```
     LOAD DATA INFILE '/var/lib/mysql-files/master_innings.csv'
-    INTO TABLE cricket_innings
+    INTO TABLE mydatabase.cricket_innings
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
