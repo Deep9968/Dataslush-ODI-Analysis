@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS cricket_innings (
+CREATE TABLE IF NOT EXISTS mydatabase.cricket_innings (
     batter VARCHAR(255) NULL,
     match_id VARCHAR(255) NULL,
     non_striker VARCHAR(255) NULL,
@@ -16,14 +16,14 @@ CREATE TABLE IF NOT EXISTS cricket_innings (
 );
 
 LOAD DATA INFILE '/var/lib/mysql-files/master_innings.csv'
-INTO TABLE cricket_meta1
+INTO TABLE mydatabase.cricket_innings
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
 
-CREATE TABLE IF NOT EXISTS cricket_meta (
+CREATE TABLE IF NOT EXISTS mydatabase.cricket_meta (
     info_player_of_match_1 VARCHAR(255) NULL,
     info_team_type VARCHAR(255) NULL,
     info_event_sub_name VARCHAR(255) NULL,
@@ -75,8 +75,104 @@ CREATE TABLE IF NOT EXISTS cricket_meta (
 
 
 LOAD DATA INFILE '/var/lib/mysql-files/master_meta.csv'
-INTO TABLE cricket_meta1
+INTO TABLE mydatabase.cricket_meta
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
+
+Question 2 
+----------------------------------------------------------------------------------------------
+a. percentage win and total wins
+
+WITH
+  winners AS (
+  SELECT
+    info_outcome_winner AS info_teams,
+    SUBSTRING(info_season, 1, 4) AS info_season,
+    info_gender,
+    COUNT(DISTINCT match_id) AS win_cnt
+  FROM
+    mydatabase.cricket_meta
+     where info_outcome_result = 'NA'
+  GROUP BY 1, 2,  3
+)
+SELECT
+  info_teams,
+  info_season,
+  info_gender,
+  total_cnt,
+  win_cnt,
+  ROUND((win_cnt / total_cnt) * 100, 2) AS percentage_win
+FROM (
+  SELECT
+    info_teams,
+    SUBSTRING(info_season, 1, 4) AS info_season,
+    info_gender,
+    COUNT(DISTINCT match_id) AS total_cnt
+  FROM
+    mydatabase.cricket_meta
+  where info_outcome_result = 'NA'
+  GROUP BY    1,2,3 ) AS t1
+INNER JOIN
+  winners
+USING
+  (info_teams,
+    info_season,
+    info_gender);
+
+----------------------------------------------------------------------------------------------
+ b. highest win percentages in 2019
+WITH
+  winners AS (
+  SELECT
+    info_outcome_winner AS info_teams,
+    SUBSTRING(info_season, 1, 4) AS info_season,
+    info_gender,
+    COUNT(DISTINCT match_id) AS win_cnt
+  FROM
+    mydatabase.cricket_meta
+     where info_outcome_result = 'NA'
+  GROUP BY 1, 2,  3
+),
+raw as (
+
+SELECT
+  info_teams,
+  info_season,
+  info_gender,
+  total_cnt,
+  win_cnt,
+  ROUND((win_cnt /  highest win percentages in 2019total_cnt) * 100, 2) AS percentage_win
+FROM (
+  SELECT
+    info_teams,
+    SUBSTRING(info_season, 1, 4) AS info_season,
+    info_gender,
+    COUNT(DISTINCT match_id) AS total_cnt
+  FROM
+    mydatabase.cricket_meta
+  where info_outcome_result = 'NA'
+  GROUP BY    1,2,3 ) AS t1
+INNER JOIN
+  winners
+USING
+  (info_teams,
+    info_season,
+    info_gender)
+where info_season= '2019'
+)
+
+SELECT * 
+FROM raw 
+WHERE CONCAT(info_gender, percentage_win) IN (
+    SELECT CONCAT(info_gender, max_win) 
+    FROM (
+        SELECT info_gender, MAX(percentage_win) AS max_win 
+        FROM raw 
+        GROUP BY 1
+    ) t
+);
+
+
+

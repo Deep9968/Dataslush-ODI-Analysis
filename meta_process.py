@@ -13,8 +13,9 @@ def meta_master_csv(schema_columns):
     for i in csv_files:
         individual_csv_filename = f'./meta_info/{i}'
         df = pd.read_csv(individual_csv_filename)
-        df.fillna('NA', inplace=True)
         master_data = pd.concat([master_data, df], ignore_index=True)
+        
+    master_data.fillna('NA', inplace=True)
 
     
     master_data.to_csv('result-data/master_meta.csv', index=False)
