@@ -37,7 +37,7 @@
 4. Copy the master CSV files to the MySQL container:
     ```
     docker cp result-data/master_meta.csv  mysql-odi:/var/lib/mysql-files/master_meta.csv
-    docker cp result-data/master_inngings.csv  mysql-odi:/var/lib/mysql-files/master_inngings.csv
+    docker cp result-data/master_innings.csv  mysql-odi:/var/lib/mysql-files/master_innings.csv
     ```
 
 
