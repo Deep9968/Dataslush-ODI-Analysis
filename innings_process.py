@@ -16,7 +16,7 @@ def innings_master_csv(schema_columns):
         inngins_master = pd.concat([inngins_master, df], ignore_index=True)
 
     # Save master CSV with final schema
-    inngins_master.to_csv('result-data/master_innings2.csv', index=False)
+    inngins_master.to_csv('result-data/master_innings.csv', index=False)
     print('successfully saved the master innings csv')
 
 # innings_master_csv(schema_columns)

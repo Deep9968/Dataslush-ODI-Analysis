@@ -195,32 +195,31 @@ def innings(data,file_name,schema_columns):
                     }
                 )
 
-    print(file_name)
+    
     df= pd.DataFrame(innings_data)
     df.to_csv(f'innings/{file_name}.csv', index=False)
     
     schema_columns.update(df.columns)
     return  schema_columns
     
-     
-if __name__ == "__main__":
-    # meta_info
-    json_files=[]
-    for file in os.listdir('./odi_json_files'):
-        if file.endswith('.json'):
-            json_files.append(file) 
-    
-    schema_meta = set()
-    schema_innings = set()
+def main1():   
+        # meta_info
+        json_files=[]
+        for file in os.listdir('./odi_json_files'):
+            if file.endswith('.json'):
+                json_files.append(file) 
+        
+        schema_meta = set()
+        schema_innings = set()
 
-    cnt = 1
-    
-    for i in json_files:
-        with open(f'./odi_json_files/{i}') as f:
-            data = json.load(f)
-            schema_columns1 = flatten_json(data, i, schema_meta)
-            schema_columns2 = innings(data, i, schema_innings)
-            cnt += 1
-    meta_process.meta_master_csv(schema_columns1)
-    innings_process.innings_master_csv(schema_columns2)
+        cnt = 1
+        print('Transforming the JSON data into two master CSV')
+        for i in json_files:
+            with open(f'./odi_json_files/{i}') as f:
+                data = json.load(f)
+                schema_columns1 = flatten_json(data, i, schema_meta)
+                schema_columns2 = innings(data, i, schema_innings)
+                cnt += 1
+        meta_process.meta_master_csv(schema_columns1)
+        innings_process.innings_master_csv(schema_columns2)
 
