@@ -125,14 +125,14 @@
 4. Load the master CSV files into the tables:
     ```
     LOAD DATA LOCAL INFILE '/var/lib/mysql-files/master_meta.csv'
-    INTO TABLE meta_data
+    INTO TABLE cricket_meta
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
     IGNORE 1 LINES;
 
     LOAD DATA LOCAL INFILE '/var/lib/mysql-files/master_inngings.csv'
-    INTO TABLE innings_data
+    INTO TABLE cricket_innings
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
